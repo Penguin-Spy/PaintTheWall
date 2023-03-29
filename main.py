@@ -2,23 +2,47 @@ import pygame, sys
 from pygame.locals import QUIT
 
 from player import Player, Direction
+from level import Level
 
 pygame.init()
-window = pygame.display.set_mode((400, 300))
 pygame.display.set_caption('Paint the Wall')
+clock = pygame.time.Clock()
 
-window.fill((255, 0, 0))
+player = Player(5, 3, Direction.LEFT)
 
-player = Player(0, 0, Direction.LEFT)
+scale = 20
+leveltiles = [
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,1,0,0,0,0,0,1],
+  [1,0,0,1,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,1,1,0,0,0,1],
+  [1,1,1,1,1,1,0,0,0,1],
+  [1,0,1,0,0,0,0,0,0,1],
+  [1,0,0,0,1,0,0,1,0,1],
+  [1,1,1,1,1,1,1,1,1,1]
+]
+level = Level(leveltiles)
+
+screen = pygame.display.set_mode((level.width * scale, level.height * scale))
+
 
 run = True
 while run:
-    pygame.time.delay(100)
+  pygame.event.pump()
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      run = False
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
 
-    window.fill((0, 0, 0))
-    player.draw(pygame, window)
-    pygame.display.flip()
+  # Update
+  player.update(pygame, level)
+
+  # Render
+  screen.fill((0, 0, 0))
+  player.draw(pygame, screen, scale)
+  level.draw(pygame, screen, scale)
+
+  pygame.display.flip()
+  clock.tick(60)
