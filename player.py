@@ -52,12 +52,16 @@ class Player:
     y = self.y + value[1]
 
     next_tile = level.get_tile(x, y)
-    print(next_tile, direction, next_tile.solid(direction))
     if next_tile.solid(direction):  # if we hit a wall, we're on the ground now
       self.onground = True
     else:
+      if next_tile.is_bucket():
+        self.color = next_tile.color()
+      elif next_tile.is_slope():
+        self.direction = next_tile.reflect(self.direction)
       self.x = x
       self.y = y
+
 
   def draw(self, pygame, screen, scale):
     pygame.draw.rect(

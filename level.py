@@ -37,17 +37,19 @@ class Tile(Enum):
   def is_slope(self):
     return self == Tile.SLOPE_DR or self == Tile.SLOPE_DL or self == Tile.SLOPE_UR or self == Tile.SLOPE_UL
 
+
   def color(self):
     if self == Tile.PAINTABLE_RED or self == Tile.PAINTED_RED or self == Tile.BUCKET_RED:
-      return Color.RED.value
+      return Color.RED
     elif self == Tile.PAINTABLE_BLUE or self == Tile.PAINTED_BLUE or self == Tile.BUCKET_BLUE:
-      return Color.BLUE.value
+      return Color.BLUE
     elif self == Tile.PAINTABLE_GREEN or self == Tile.PAINTED_GREEN or self == Tile.BUCKET_GREEN:
-      return Color.GREEN.value
+      return Color.GREEN
     elif self == Tile.PAINTABLE_YELLOW or self == Tile.PAINTED_YELLOW or self == Tile.BUCKET_YELLOW:
-      return Color.YELLOW.value
+      return Color.YELLOW
 
-    return Color.WHITE.value
+    return Color.WHITE
+
 
   def solid(self, direction):   # direction is the side of the tile, the names of the slope are where the angle faces outwards
     if self == Tile.WALL:       # hence the direction comparisons matching the name of the slope
@@ -61,6 +63,37 @@ class Tile(Enum):
     elif self == Tile.SLOPE_UL and (direction == Direction.UP or direction == Direction.LEFT):
       return True
     return False
+
+
+  # bounce a direction off of this slope
+  def reflect(self, direction):
+    if direction == Direction.UP:
+      if self == Tile.SLOPE_DR:
+        return Direction.RIGHT
+      elif self == Tile.SLOPE_DL:
+        return Direction.LEFT
+
+    if direction == Direction.DOWN:
+      if self == Tile.SLOPE_UR:
+        return Direction.RIGHT
+      elif self == Tile.SLOPE_UL:
+        return Direction.LEFT
+
+    if direction == Direction.LEFT:
+      if self == Tile.SLOPE_DR:
+        return Direction.DOWN
+      elif self == Tile.SLOPE_UR:
+        return Direction.UP
+
+    if direction == Direction.RIGHT:
+      if self == Tile.SLOPE_DL:
+        return Direction.DOWN
+      elif self == Tile.SLOPE_UL:
+        return Direction.UP
+
+    return direction
+
+
 
 class Level():
   width = None
@@ -104,12 +137,12 @@ class Level():
         elif tile == Tile.WALL:
           color = (31, 31, 31)
         else:
-          color = tile.color()
+          color = tile.color().value
 
         tl = (x*scale, y*scale)
-        tr = ((x+1)*scale, y*scale)
-        bl = (x*scale, (y+1)*scale)
-        br = ((x+1)*scale, (y+1)*scale)
+        tr = ((x+1)*scale-1, y*scale)
+        bl = (x*scale, (y+1)*scale-1)
+        br = ((x+1)*scale-1, (y+1)*scale-1)
 
         if(tile.is_paintable()):
           pygame.draw.line(screen, color, tl, br)
