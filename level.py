@@ -51,6 +51,19 @@ class Tile(Enum):
     return Color.WHITE
 
 
+  def paint(self):
+    if self == Tile.PAINTABLE_RED:
+      return Tile.PAINTED_RED
+    elif self == Tile.PAINTABLE_BLUE:
+      return Tile.PAINTED_BLUE
+    elif self == Tile.PAINTABLE_GREEN:
+      return Tile.PAINTED_GREEN
+    elif self == Tile.PAINTABLE_YELLOW:
+      return Tile.PAINTED_YELLOW
+
+    return self
+
+
   def solid(self, direction):   # direction is the side of the tile, the names of the slope are where the angle faces outwards
     if self == Tile.WALL:       # hence the direction comparisons matching the name of the slope
       return True
@@ -127,6 +140,7 @@ class Level():
     self.width = columns
     self.tiles = tiles
 
+
   def draw(self, pygame, screen, scale):
     for x in range(self.width):
       for y in range(self.height):
@@ -175,6 +189,9 @@ class Level():
 
   def get_tile(self, x, y):
     return self.tiles[y][x]
+
+  def paint_tile(self, x, y):
+    self.tiles[y][x] = self.tiles[y][x].paint()
 
   def collides(self, x, y):
     if self.tiles[y][x] == Tile.WALL:

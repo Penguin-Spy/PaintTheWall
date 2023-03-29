@@ -57,6 +57,9 @@ class Player:
     else:
       if next_tile.is_bucket():
         self.color = next_tile.color()
+      elif next_tile.is_paintable():
+        if next_tile.color() == self.color:
+          level.paint_tile(x, y)
       elif next_tile.is_slope():
         self.direction = next_tile.reflect(self.direction)
       self.x = x
