@@ -112,8 +112,11 @@ class Level():
   width = None
   height = None
   tiles = None
+  complete = None
+  font = None
 
   def __init__(self, level_data):
+    complete = False
 
     # data = level_data.readlines()
 
@@ -140,8 +143,27 @@ class Level():
     self.width = columns
     self.tiles = tiles
 
+  
+  def update(self):
+    self.complete = self.check_complete()
 
-  def draw(self, pygame, screen, scale):
+  def check_complete(self):
+    for x in range(self.width):
+      for y in range(self.height):
+        if self.tiles[y][x].is_paintable():
+          return False
+    return True
+  
+  
+  def draw(self, pygame, screen, scale, font):
+    if self.complete:
+      img = font.render('Level complete!', True, Color.WHITE.value)
+      x = (self.width*scale - img.get_width()) // 2
+      y = (self.height*scale - img.get_height()) // 2
+      screen.blit(img, (x, y))
+      
+      return
+    
     for x in range(self.width):
       for y in range(self.height):
         tile = self.tiles[y][x]

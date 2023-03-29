@@ -6,6 +6,7 @@ class Player:
   direction = None
   color = None
   onground = None
+  visible = None
 
   def __init__(self, x, y, direction, color):
     self.x = x
@@ -13,6 +14,7 @@ class Player:
     self.direction = direction
     self.color = color
     self.onground = True
+    self.visible = True
 
   def respawn(self):
     self.x = 0
@@ -20,6 +22,10 @@ class Player:
     self.direction = Direction.RIGHT
 
   def update(self, pygame, level):
+    if level.complete:
+        self.visible = False
+        return
+    
     if self.onground:   # if we're attached to a wall, allow player input
       keys = pygame.key.get_pressed()
       if keys[pygame.K_LEFT]:
@@ -67,7 +73,8 @@ class Player:
 
 
   def draw(self, pygame, screen, scale):
-    pygame.draw.rect(
-      screen,
-      self.color.value,
-      (self.x * scale, self.y * scale, scale, scale))
+    if self.visible:
+      pygame.draw.rect(
+        screen,
+        self.color.value,
+        (self.x * scale, self.y * scale, scale, scale))

@@ -28,6 +28,7 @@ level_data = [
 level = Level(level_data)
 
 screen = pygame.display.set_mode((level.width * scale, level.height * scale))
+font = pygame.font.SysFont(None, 24)
 
 
 run = True
@@ -40,11 +41,13 @@ while run:
 
   # Update
   player.update(pygame, level)
+  level.update()
 
   # Render
   screen.fill((0, 0, 0))
-  level.draw(pygame, screen, scale)
+  level.draw(pygame, screen, scale, font)
   player.draw(pygame, screen, scale)  # player should appear above level
 
   pygame.display.flip()
   clock.tick(60)
+
