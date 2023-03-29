@@ -1,22 +1,17 @@
-from enum import Enum
-
-class Direction(Enum):
-  UP = (0, -1)
-  DOWN = (0, 1)
-  LEFT = (-1, 0)
-  RIGHT = (1, 0)
-
+from util import Direction
 
 class Player:
   x = None
   y = None
   direction = None
+  color = None
   onground = None
 
-  def __init__(self, x, y, direction):
+  def __init__(self, x, y, direction, color):
     self.x = x
     self.y = y
     self.direction = direction
+    self.color = color
     self.onground = True
 
   def respawn(self):
@@ -52,17 +47,20 @@ class Player:
 
 
   def move(self, level, direction):
-    direction = direction.value
-    x = self.x + direction[0]
-    y = self.y + direction[1]
-    if not level.collides(x, y):
+    value = direction.value
+    x = self.x + value[0]
+    y = self.y + value[1]
+
+    next_tile = level.get_tile(x, y)
+    print(next_tile, direction, next_tile.solid(direction))
+    if next_tile.solid(direction):  # if we hit a wall, we're on the ground now
+      self.onground = True
+    else:
       self.x = x
       self.y = y
-    else:   # if we hit a wall, we're on the ground now
-      self.onground = True
 
   def draw(self, pygame, screen, scale):
     pygame.draw.rect(
       screen,
-      (0, 255, 0),
+      self.color.value,
       (self.x * scale, self.y * scale, scale, scale))
