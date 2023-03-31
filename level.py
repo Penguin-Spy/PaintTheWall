@@ -179,8 +179,8 @@ class Level():
         br = ((x+1)*scale-1, (y+1)*scale-1)
 
         if(tile.is_paintable()):
-          pygame.draw.line(screen, color, tl, br)
-          pygame.draw.line(screen, color, tr, bl)
+          pygame.draw.line(screen, color, tl, br, width = 2)
+          pygame.draw.line(screen, color, tr, bl, width = 2)
 
         elif(tile.is_painted()):
           pygame.draw.circle(screen, color, ((x+.5) * scale, (y+.5) * scale), scale/2)

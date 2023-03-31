@@ -48,7 +48,7 @@ class Player:
         self.direction = Direction.DOWN
         self.move(level, Direction.DOWN)
 
-    else:   # if not, keep careening towards whatever direction we're facting
+    else:   # if not, keep careening towards whatever direction we're facing
       self.move(level, self.direction)
 
 
