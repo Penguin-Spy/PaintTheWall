@@ -1,56 +1,48 @@
 import pygame, sys
-from pygame.locals import QUIT
 
 from util import Direction, Color
 from player import Player
 from level import Level
 
-pygame.init()
-pygame.display.set_caption('Paint the Wall')
-clock = pygame.time.Clock()
+def load_level(level_name, player, scale):
+  with open(f"assets/levels/{level_name}") as level_data:
+    level = Level(level_data)
+  player.respawn(5, 3, Direction.DOWN, Color.WHITE)
 
-player = Player(5, 3, Direction.DOWN, Color.WHITE)
+  screen = pygame.display.set_mode((level.width * scale, level.height * scale))
+  
+  return level, screen
 
-scale = 25
-level_data = [
-  "00000000000000000000",
-  "0   1 0        00000",
-  "000            00000",
-  "0    0 00r       2 0",
-  "0      00          0",
-  "0rr   c0           0",
-  "00000000           0",
-  "0gg       0000000000",
-  "0gg      0p       30",
-  "0       00 000000000",
-  "04      00b   yy  q0",
-  "0             00   0",
-  "000           yy  d0",
-  "00000000000000000000",
-]
-level = Level(level_data)
+def main():
+  pygame.init()
+  pygame.display.set_caption('Paint the Wall')
+  icon = pygame.image.load("assets/icon.png")
+  pygame.display.set_icon(icon)
+  
+  clock = pygame.time.Clock()
+  font = pygame.font.SysFont(None, 24)
+  
+  scale = 25
+  player = Player()
+  level, screen = load_level("demo.dat", player, scale)
+  
+  run = True
+  while run:
+    pygame.event.pump()
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        run = False
+  
+    # Update
+    player.update(pygame, level)
+    level.update()
+  
+    # Render
+    screen.fill((0, 0, 0))
+    level.draw(pygame, screen, scale, font)
+    player.draw(pygame, screen, scale)  # player should appear above level
+  
+    pygame.display.flip()
+    clock.tick(60)
 
-screen = pygame.display.set_mode((level.width * scale, level.height * scale))
-font = pygame.font.SysFont(None, 24)
-
-
-run = True
-while run:
-  pygame.event.pump()
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      run = False
-
-
-  # Update
-  player.update(pygame, level)
-  level.update()
-
-  # Render
-  screen.fill((0, 0, 0))
-  level.draw(pygame, screen, scale, font)
-  player.draw(pygame, screen, scale)  # player should appear above level
-
-  pygame.display.flip()
-  clock.tick(60)
-
+main()

@@ -120,8 +120,6 @@ class Level():
   def __init__(self, level_data):
     complete = False
 
-    # data = level_data.readlines()
-
     tiles = []
     rows = 0
     columns = 0
@@ -131,7 +129,7 @@ class Level():
       tiles.append([])  # make new array for this row (zero indexed)
 
       column_counter = 0
-      for char in line:
+      for char in line.rstrip():
         column_counter += 1
         tiles[rows-1].append(Tile(char))
 

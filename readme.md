@@ -1,6 +1,6 @@
 # Paint the Wall
 
-workin on a game for a pygame competition. not done yet.  
+workin on a game for a pygame competition. submitted, but i still have some things i want to add. 
 `poetry install` to install dependencies,  
 `poetry run python main.py` to run
 
