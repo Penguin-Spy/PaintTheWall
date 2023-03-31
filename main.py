@@ -9,21 +9,24 @@ pygame.init()
 pygame.display.set_caption('Paint the Wall')
 clock = pygame.time.Clock()
 
-player = Player(5, 3, Direction.LEFT, Color.WHITE)
+player = Player(5, 3, Direction.DOWN, Color.WHITE)
 
-scale = 20
+scale = 25
 level_data = [
-  "00000000000000",
-  "0rR1 cC2 gG300",
-  "0yY4 00      0",
-  "0            0",
-  "0pq          0",
-  "0bd   0 0000 0",
-  "00    0 0 0  0",
-  "0 db  0   0  0",
-  "0 qp  00000  0",
-  "00   00      0",
-  "00000000000000",
+  "00000000000000000000",
+  "0   1 0        00000",
+  "000            00000",
+  "0    0 00r       2 0",
+  "0      00          0",
+  "0rr   c0           0",
+  "00000000           0",
+  "0gg       0000000000",
+  "0gg      0p       30",
+  "0       00 000000000",
+  "04      00b   yy  q0",
+  "0             00   0",
+  "000           yy  d0",
+  "00000000000000000000",
 ]
 level = Level(level_data)
 

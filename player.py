@@ -13,7 +13,7 @@ class Player:
     self.y = y
     self.direction = direction
     self.color = color
-    self.onground = True
+    self.onground = False
     self.visible = True
 
   def respawn(self):
@@ -25,7 +25,7 @@ class Player:
     if level.complete:
         self.visible = False
         return
-    
+
     if self.onground:   # if we're attached to a wall, allow player input
       keys = pygame.key.get_pressed()
       if keys[pygame.K_LEFT]:

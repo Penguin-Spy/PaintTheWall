@@ -39,7 +39,9 @@ class Tile(Enum):
 
 
   def color(self):
-    if self == Tile.PAINTABLE_RED or self == Tile.PAINTED_RED or self == Tile.BUCKET_RED:
+    if self == Tile.WALL or self.is_slope():
+      return Color.GRAY
+    elif self == Tile.PAINTABLE_RED or self == Tile.PAINTED_RED or self == Tile.BUCKET_RED:
       return Color.RED
     elif self == Tile.PAINTABLE_BLUE or self == Tile.PAINTED_BLUE or self == Tile.BUCKET_BLUE:
       return Color.BLUE
@@ -143,7 +145,7 @@ class Level():
     self.width = columns
     self.tiles = tiles
 
-  
+
   def update(self):
     self.complete = self.check_complete()
 
@@ -153,27 +155,23 @@ class Level():
         if self.tiles[y][x].is_paintable():
           return False
     return True
-  
-  
+
+
   def draw(self, pygame, screen, scale, font):
     if self.complete:
       img = font.render('Level complete!', True, Color.WHITE.value)
       x = (self.width*scale - img.get_width()) // 2
       y = (self.height*scale - img.get_height()) // 2
       screen.blit(img, (x, y))
-      
+
       return
-    
+
     for x in range(self.width):
       for y in range(self.height):
         tile = self.tiles[y][x]
-        color = (255, 255, 255)   # shouldn't appear
         if tile == Tile.AIR:
           continue
-        elif tile == Tile.WALL:
-          color = (31, 31, 31)
-        else:
-          color = tile.color().value
+        color = tile.color().value
 
         tl = (x*scale, y*scale)
         tr = ((x+1)*scale-1, y*scale)

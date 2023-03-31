@@ -12,3 +12,4 @@ class Color(Enum):
   GREEN = (63, 255, 63)
   YELLOW = (255, 255, 31)
   WHITE = (255, 255, 255)
+  GRAY = (63, 63, 63)
