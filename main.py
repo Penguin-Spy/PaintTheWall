@@ -7,7 +7,8 @@ from level import Level
 def load_level(level_name, player, scale):
   with open(f"assets/levels/{level_name}") as level_data:
     level = Level(level_data)
-  player.respawn(5, 3, Direction.DOWN, Color.WHITE)
+  spawn_x, spawn_y = level.get_spawn_pos()
+  player.respawn(spawn_x, spawn_y, Direction.DOWN, Color.WHITE)
 
   screen = pygame.display.set_mode((level.width * scale, level.height * scale))
   
@@ -39,8 +40,14 @@ def main():
   
     # Render
     screen.fill((0, 0, 0))
-    level.draw(pygame, screen, scale, font)
-    player.draw(pygame, screen, scale)  # player should appear above level
+    if player.complete:
+      img = font.render('Level complete!', True, Color.WHITE.value)
+      x = (level.width*scale - img.get_width()) // 2
+      y = (level.height*scale - img.get_height()) // 2
+      screen.blit(img, (x, y))
+    else:
+      level.draw(pygame, screen, scale, font)
+      player.draw(pygame, screen, scale)  # player should appear above level
   
     pygame.display.flip()
     clock.tick(60)

@@ -13,3 +13,5 @@ class Color(Enum):
   YELLOW = (255, 255, 31)
   WHITE = (255, 255, 255)
   GRAY = (63, 63, 63)
+  BROWN = (135, 73, 32)
+  GOLD = (255, 213, 30)

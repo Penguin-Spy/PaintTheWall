@@ -6,7 +6,8 @@ from util import Color, Direction
 class Tile(Enum):
   AIR = " "
   WALL = "0"
-  EXIT = "E"       #  _________
+  EXIT = "E"       
+  SPAWN = "S"      #  _________
   SLOPE_DR = "p"   # |p       q|    corners facing in
   SLOPE_DL = "q"   # |         |
   SLOPE_UR = "b"   # |         |
@@ -36,6 +37,12 @@ class Tile(Enum):
 
   def is_slope(self):
     return self == Tile.SLOPE_DR or self == Tile.SLOPE_DL or self == Tile.SLOPE_UR or self == Tile.SLOPE_UL
+
+  def is_nodraw(self):
+    return self == Tile.AIR or self == Tile.SPAWN
+
+  def is_exit(self):
+    return self == Tile.EXIT
 
 
   def color(self):
@@ -116,6 +123,7 @@ class Level():
   tiles = None
   complete = None
   font = None
+  spawn_pos = None
 
   def __init__(self, level_data):
     complete = False
@@ -131,13 +139,19 @@ class Level():
       column_counter = 0
       for char in line.rstrip():
         column_counter += 1
-        tiles[rows-1].append(Tile(char))
+        next_tile = Tile(char)
+        if next_tile == Tile.SPAWN:
+          self.spawn_pos = (column_counter-1, rows-1)
+        tiles[rows-1].append(next_tile)
 
       # check to make sure level is a rectangle
       if rows == 1:
         columns = column_counter
       elif column_counter != columns:
         raise Exception(f"Non-rectangular level region! Expected {columns} columns for row {rows}, but got {column_counter}!")
+
+    if self.spawn_pos == None:
+      raise Exception("No start position found in level!")
 
     self.height = rows
     self.width = columns
@@ -156,20 +170,17 @@ class Level():
 
 
   def draw(self, pygame, screen, scale, font):
-    if self.complete:
-      img = font.render('Level complete!', True, Color.WHITE.value)
-      x = (self.width*scale - img.get_width()) // 2
-      y = (self.height*scale - img.get_height()) // 2
-      screen.blit(img, (x, y))
-
-      return
-
     for x in range(self.width):
       for y in range(self.height):
         tile = self.tiles[y][x]
-        if tile == Tile.AIR:
+        if tile.is_nodraw():
           continue
         color = tile.color().value
+        if tile.is_exit():
+          if self.complete:
+            color = Color.GOLD.value
+          else:
+            color = Color.BROWN.value
 
         tl = (x*scale, y*scale)
         tr = ((x+1)*scale-1, y*scale)
@@ -215,4 +226,7 @@ class Level():
     if self.tiles[y][x] == Tile.WALL:
       return True
     return False
+
+  def get_spawn_pos(self):
+    return self.spawn_pos
 

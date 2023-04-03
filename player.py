@@ -7,9 +7,11 @@ class Player:
   color = None
   onground = None
   visible = None  # can't move while invisible
+  complete = None
 
   def __init__(self):
     self.visible = False
+    self.complete = False
     # invalid to call update until respawn is called once!
 
   def respawn(self, x, y, direction, color):
@@ -17,13 +19,12 @@ class Player:
     self.y = y
     self.direction = direction
     self.color = color
-    self.onground = False
+    self.onground = True
     self.visible = True
+    self.complete = False
 
   def update(self, pygame, level):
-    if level.complete:
-        self.visible = False
-    if not self.visible:
+    if not self.visible or self.complete:
         return
 
     if self.onground:   # if we're attached to a wall, allow player input
@@ -68,6 +69,8 @@ class Player:
           level.paint_tile(x, y)
       elif next_tile.is_slope():
         self.direction = next_tile.reflect(self.direction)
+      elif next_tile.is_exit() and level.complete:
+        self.complete = True
       self.x = x
       self.y = y
 
